@@ -47,8 +47,6 @@ class theoricus.core.Router
 
   route:( state )->
 
-    console.log 'state', state
-
     if @trigger
 
       # url from HistoryJS
@@ -70,12 +68,7 @@ class theoricus.core.Router
       url = app.root if url == "/"
 
       for route in @routes
-
-        if route.matcher?
-          console.log route.matcher, url
-        else
-          console.log url
-
+        
         if route.matcher.test url
           @on_change?( route.clone url )
           return
