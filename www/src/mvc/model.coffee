@@ -5,13 +5,15 @@
 class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   {ArrayUtil} = theoricus.utils
 
-  _fields = []
-  _collection = []
+  @_fields     = []
+  @_collection = []
 
   # SETUP METHODS ############################################################
 
   @rest=( host, resources )->
+
     [resources, host] = [host, null] unless resources?
+
     for k, v of resources
       @[k] = @_build_rest.apply @, [k].concat(v.concat host)
 
@@ -31,9 +33,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] domain  
   ###
   @_build_rest=( key, method, url, domain )->
+    console.log ':', key, method, url, domain
+
     ( args... )->
-      if key is "read" and _collection.length
-        found = ArrayUtil.find _collection, {id: args[0]}
+      if key is "read" and @_collection.length
+        found = ArrayUtil.find @_collection, {id: args[0]}
         return found.item if found?
       
       if args.length
@@ -45,7 +49,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       while (/:\w+/.exec url)?
         url = url.replace /:\w+/, args.shift() || null
 
-      url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
+      # i don't understand this
+      # url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
+      # so i did this:
+      url = "#{domain}/#{url}"
+
       @_request method, url, data
 
   ###
@@ -123,6 +131,6 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       model = (Factory.model classname, record)
       records.push model
 
-    _collection = ( _collection || [] ).concat records
+    @_collection = ( @_collection || [] ).concat records
 
     return if records.length is 1 then records[0] else records
