@@ -52,7 +52,9 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       # i don't understand this
       # url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
       # so i did this:
-      url = "#{domain}/#{url}"
+
+      if domain?
+        url = "#{domain}/#{url}"
 
       @_request method, url, data
 
