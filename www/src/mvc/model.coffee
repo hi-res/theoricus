@@ -46,15 +46,14 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         else
           data = ''
 
-      while (/:\w+/.exec url)?
-        url = url.replace /:\w+/, args.shift() || null
+      while (/:[a-z]+/.exec url)?
+        url = url.replace /:[a-z]+/, args.shift() || null
 
       # i don't understand this
       # url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
       # so i did this:
 
-      if domain?
-        url = "#{domain}/#{url}"
+      url = "#{domain}/#{url}" if domain?
 
       @_request method, url, data
 
