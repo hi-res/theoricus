@@ -49,11 +49,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       while (/:[a-z]+/.exec url)?
         url = url.replace /:[a-z]+/, args.shift() || null
 
-      if( url.substr( 0, 1 ) == '/' ) then url = url.substr( 1 )
+      if url.substr( 0, 1 ) == '/' 
+        url = url.substr( 1 )
 
-      url = "#{domain}/#{url}"
-
-      console.warn 'url ->', url
+      if domain?
+        url = "#{domain}/#{url}"
 
       @_request method, url, data
 
