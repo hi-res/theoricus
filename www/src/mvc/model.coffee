@@ -25,17 +25,24 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   # SETUP HELPERS ############################################################
 
   ###
-  Build a static rest call for the given params
+  Builds a method to fetch the given service.
 
+  Notice the method is being returned inside a private scope
+  that contains all the variables needed to fetch the data.
+
+  
   @param [String] key   
   @param [String] method  
   @param [String] url   
   @param [String] domain  
   ###
   @_build_rest=( key, method, url, domain )->
-    console.log ':->', key, method, url, domain
+    # console.log 'building ->', key, method, url, domain
 
-    ( args... )->
+    return call = ( args... )->
+
+      # console.log 'calling -->', key, method, url, domain, args
+
       # when asking to read a registry, check if it was already loaded
       # if so, return the cached entry
       if key is "read" and @_collection.length
@@ -50,6 +57,12 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         else
           data = ''
 
+      # creating a new variable for request url in order to do the replacing
+      # logic from scratch every time the method is called
+      # for some "weird" reason without this "hack" the url would 
+      # build on top of the last built url, resulting in wrong addresses
+      r_url = url
+
       # You can set variables on the URL using ":variable"
       # and they'll be replace by the args you pass.
       # 
@@ -60,13 +73,13 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       # called as MyModel.all( 66 )
       # will result in a call to "my/path/to/66.json"
       # 
-      while (/:[a-z]+/.exec url)?
-        url = url.replace /:[a-z]+/, args.shift() || null
+      while (/:[a-z]+/.exec r_url)?
+        r_url = url.replace /:[a-z]+/, args.shift() || null
 
       # if domain is specified attach to the beggining of the url
-      url = "#{domain}/#{url}" if domain?
+      r_url = "#{domain}/#{r_url}" if domain?
 
-      @_request method, url, data
+      @_request method, r_url, data
 
   ###
   General request method
@@ -75,7 +88,9 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] url   URL to be requested
   @param [Object] data  Data to be send
   ###
-  @_request=( method, url, data='' )->
+  @_request=( method, url, data='' ) ->
+    console.error "[Model] request", method, url, data
+
     fetcher = new theoricus.mvc.lib.Fetcher
 
     req = $.ajax url:url, type: method, data: data
