@@ -36,26 +36,63 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
     console.log ':->', key, method, url, domain
 
     ( args... )->
+      # when asking to read a registry, check if it was already loaded
+      # if so, return the cached entry
       if key is "read" and @_collection.length
         found = ArrayUtil.find @_collection, {id: args[0]}
         return found.item if found?
       
+      # when calling a method, you can pass as last argument
+      # one object that will be sent as data during the "ajax call"
       if args.length
         if (typeof args[args.length-1] is 'object')
           data = args.pop()
         else
           data = ''
 
+      # You can set variables on the URL using ":variable"
+      # and they'll be replace by the args you pass.
+      # 
+      # i.e. 
+      # @rest
+      #     'all' : [ 'GET', 'my/path/to/:id.json' ]
+      # 
+      # called as MyModel.all( 66 )
+      # will result in a call to "my/path/to/66.json"
+      # 
       while (/:[a-z]+/.exec url)?
         url = url.replace /:[a-z]+/, args.shift() || null
 
-      # i don't understand this
-      url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
-      # so i did this:
-
-      # url = "#{domain}/#{url}" if domain?
+      # if domain is specified attach to the beggining of the url
+      url = "#{domain}/#{url}" if domain?
 
       @_request method, url, data
+
+  ###
+  General request method
+
+  @param [String] method  URL request method
+  @param [String] url   URL to be requested
+  @param [Object] data  Data to be send
+  ###
+  @_request=( method, url, data='' )->
+    fetcher = new theoricus.mvc.lib.Fetcher
+
+    req = $.ajax url:url, type: method, data: data
+
+    req.done ( data )=>
+      fetcher.loaded = true
+      fetcher.records = @_instantiate data
+      fetcher.onload?( fetcher.records )
+
+    req.error ( error )=>
+      fetcher.error = true
+      if fetcher.onerror?
+        fetcher.onerror error
+      else
+        throw error
+
+    fetcher
 
   ###
   Builds local getters/setters for the given params
@@ -88,34 +125,6 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
 
     @::.__defineGetter__ field, getter
     @::.__defineSetter__ field, setter
-
-
-
-  ###
-  General request method
-
-  @param [String] method  URL request method
-  @param [String] url   URL to be requested
-  @param [Object] data  Data to be send
-  ###
-  @_request=( method, url, data='' )->
-    fetcher = new theoricus.mvc.lib.Fetcher
-
-    req = $.ajax url:url, type: method, data: data
-
-    req.done ( data )=>
-      fetcher.loaded = true
-      fetcher.records = @_instantiate data
-      fetcher.onload?( fetcher.records )
-
-    req.error ( error )=>
-      fetcher.error = true
-      if fetcher.onerror?
-        fetcher.onerror error
-      else
-        throw error
-
-    fetcher
 
 
 
