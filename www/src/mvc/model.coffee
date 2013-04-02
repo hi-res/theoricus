@@ -33,7 +33,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] domain  
   ###
   @_build_rest=( key, method, url, domain )->
-    # console.log ':', key, method, url, domain
+    console.log ':->', key, method, url, domain
 
     ( args... )->
       if key is "read" and @_collection.length
@@ -49,11 +49,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       while (/:[a-z]+/.exec url)?
         url = url.replace /:[a-z]+/, args.shift() || null
 
-      if url.substr( 0, 1 ) == '/' 
-        url = url.substr( 1 )
+      # i don't understand this
+      url = "#{domain}/#{url}".replace /\/\//g, '/' if domain?
+      # so i did this:
 
-      if domain?
-        url = "#{domain}/#{url}"
+      # url = "#{domain}/#{url}" if domain?
 
       @_request method, url, data
 
