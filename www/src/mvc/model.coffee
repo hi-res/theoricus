@@ -159,6 +159,13 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       model = (Factory.model classname, record)
       records.push model
 
+    ###
+    When calling the rest service multiple times, the collection variable keeps 
+    the old data and duplicate the recordset between a rest call and another one.
+    For now, just flush the old collection when instantiate a new model instance
+    ###
+    @_collection = []
+
     @_collection = ( @_collection || [] ).concat records
 
     return if records.length is 1 then records[0] else records
