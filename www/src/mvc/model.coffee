@@ -89,7 +89,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [Object] data  Data to be send
   ###
   @_request=( method, url, data='' ) ->
-    console.error "[Model] request", method, url, data
+    # console.error "[Model] request", method, url, data
 
     fetcher = new theoricus.mvc.lib.Fetcher
 
