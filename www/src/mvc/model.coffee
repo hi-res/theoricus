@@ -33,7 +33,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] domain  
   ###
   @_build_rest=( key, method, url, domain )->
-    console.log ':', key, method, url, domain
+    # console.log ':', key, method, url, domain
 
     ( args... )->
       if key is "read" and @_collection.length
