@@ -10,14 +10,14 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
 
   # SETUP METHODS ############################################################
 
-  @rest=( host, resources )->
+  @rest = ( host, resources ) ->
 
     [resources, host] = [host, null] unless resources?
 
     for k, v of resources
       @[k] = @_build_rest.apply @, [k].concat(v.concat host)
 
-  @fields=( fields )->
+  @fields = ( fields ) ->
     @_build_gs key, type for key, type of fields
 
 
@@ -36,10 +36,10 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] url   
   @param [String] domain  
   ###
-  @_build_rest=( key, method, url, domain )->
+  @_build_rest = ( key, method, url, domain ) ->
     # console.log 'building ->', key, method, url, domain
 
-    return call = ( args... )->
+    return call = ( args... ) ->
 
       # console.log 'calling -->', key, method, url, domain, args
 
@@ -88,7 +88,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] url   URL to be requested
   @param [Object] data  Data to be send
   ###
-  @_request=( method, url, data='' ) ->
+  @_request = ( method, url, data='' ) ->
     # console.error "[Model] request", method, url, data
 
     fetcher = new theoricus.mvc.lib.Fetcher
@@ -115,15 +115,15 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] field
   @param [String] type
   ###
-  @_build_gs=( field, type )->
+  @_build_gs = ( field, type ) ->
     _val = null
 
     classname = ("#{@}".match /function\s(\w+)/)[1]
     stype = ("#{type}".match /function\s(\w+)/)[1]
     ltype = stype.toLowerCase()
 
-    getter=-> _val
-    setter=(value)->
+    getter = -> _val
+    setter = (value) ->
 
       switch ltype
         when 'string' then f = (typeof value is 'string')
@@ -144,11 +144,14 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
 
 
   ###
-  Instantiate new Model instances passing items as initial data
+  Instantiate one Model instance for each of the items present in data.
+
+  And array with 10 items will result in 10 new models, that will be 
+  cached into @_collection variable
 
   @param [Object] data  Data to be parsed
   ###
-  @_instantiate=( data )->
+  @_instantiate = ( data ) ->
     Factory = theoricus.core.Factory
     classname = ("#{@}".match /function\s(\w+)/)[1]
     records = []
