@@ -37,11 +37,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] domain  
   ###
   @_build_rest = ( key, method, url, domain ) ->
-    console.log 'building ->', key, method, url, domain
+    # console.log 'building ->', key, method, url, domain
 
     return call = ( args... ) ->
 
-      console.log 'calling -->', key, method, url, domain, args
+      # console.log 'calling -->', key, method, url, domain, args
 
       # when asking to read a registry, check if it was already loaded
       # if so, return the cached entry
