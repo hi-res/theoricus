@@ -5,17 +5,13 @@ class theoricus.utils.StringUtil
   ###
   @ucfirst=( str )->
     a = str.substr( 0, 1 ).toUpperCase()
-    b = str.substr( 1 ).toLowerCase()
+    b = str.substr( 1 )
     return a + b
 
   ###
   @param [String] str
   ###
   @camelize=( str )->
-
-    if str.indexOf( '_' ) is -1
-      return name.substr( 0, 1 ).toUpperCase() + name.substr( 1 )
-
     parts = [].concat( str.split "_" )
     buffer = ""
     buffer += StringUtil.ucfirst part for part in parts
