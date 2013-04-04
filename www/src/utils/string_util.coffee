@@ -12,6 +12,10 @@ class theoricus.utils.StringUtil
   @param [String] str
   ###
   @camelize=( str )->
+
+    if str.indexOf( '_' ) is -1
+      return name.substr( 0, 1 ).toUpperCase() + name.substr( 1 )
+
     parts = [].concat( str.split "_" )
     buffer = ""
     buffer += StringUtil.ucfirst part for part in parts
