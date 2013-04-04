@@ -37,11 +37,11 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [String] domain  
   ###
   @_build_rest = ( key, method, url, domain ) ->
-    # console.log 'building ->', key, method, url, domain
+    console.log 'building ->', key, method, url, domain
 
     return call = ( args... ) ->
 
-      # console.log 'calling -->', key, method, url, domain, args
+      console.log 'calling -->', key, method, url, domain, args
 
       # when asking to read a registry, check if it was already loaded
       # if so, return the cached entry
@@ -76,7 +76,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       while (/:[a-z]+/.exec r_url)?
         r_url = url.replace /:[a-z]+/, args.shift() || null
 
-      # if domain is specified attach to the beggining of the url
+      # if domain is specified we prepend to the url
       r_url = "#{domain}/#{r_url}" if domain?
 
       @_request method, r_url, data
@@ -158,6 +158,13 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
     for record in [].concat data
       model = (Factory.model classname, record)
       records.push model
+
+    ###
+    When calling the rest service multiple times, the collection variable keeps 
+    the old data and duplicate the recordset between a rest call and another one.
+    For now, just flush the old collection when instantiate a new model instance
+    ###
+    @_collection = []
 
     @_collection = ( @_collection || [] ).concat records
 
