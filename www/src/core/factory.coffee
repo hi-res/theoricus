@@ -20,11 +20,20 @@ class theoricus.core.Factory
   @model=@::model=( name, init = {} )->
     # console.log "Factory.model( '#{name}' )"
 
-    classname = name.camelize()
+
+    # FIX: fix camelize function, if you pass two words CamelCase
+    # it will fuck things up. i.e. "HomepageItem" will be converted to
+    # "Homepageitem"
+    # classname = name.camelize()
+
+    classname = name
     classpath = "app.models.#{name}"
 
     unless (klass = app.models[ classname ])?
-      console.error Error 'Model not found: ' + classpath
+      console.error 'Model not found: ' + classpath
+      console.error 'just tried classname: ' + classname
+    # else if ( klass = app.models[ name.camelize() ] )
+
     else
       unless ( model = new klass(init) ) instanceof Model
         console.error "#{classpath} is not a Model instance - you probably forgot to extend thoricus.mvc.Model"
