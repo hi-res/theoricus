@@ -22,6 +22,7 @@ class theoricus.core.Factory
 
 
     classname = name.camelize()
+    classname = name
     classpath = "app.models.#{name}"
 
     unless (klass = app.models[ classname ])?
@@ -103,6 +104,7 @@ class theoricus.core.Factory
     # console.log "Factory.controller( '#{name}' )"
 
     classname = name.camelize()
+    # classname = name
     classpath = "app.controllers.#{classname}"
 
     if @controllers[ classname ]?
