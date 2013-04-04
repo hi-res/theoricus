@@ -9,9 +9,6 @@ class theoricus.utils.StringUtil
     return a + b
 
   ###
-  FIX: fix camelize function, if you pass two words CamelCase
-  it will fuck things up. i.e. "HomepageItem" will be converted to
-  "Homepageitem"
   @param [String] str
   ###
   @camelize=( str )->
