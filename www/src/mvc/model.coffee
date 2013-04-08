@@ -93,9 +93,17 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
 
     fetcher = new theoricus.mvc.lib.Fetcher
 
-    ajax_data = @_build_ajax_data method, url, data
-
-    req = $.ajax ajax_data
+    req = 
+      url  : url
+      type : method
+      data : data
+    
+    # if url contains .json, sets dataType to json
+    # this theoritically helps firefox ( and perhaps other browsers )
+    # to deal with the request
+    req.dataType = 'json' if /\.json/.test( url )
+    
+    req = $.ajax req
 
     req.done ( data )=>
       fetcher.loaded = true
@@ -110,28 +118,6 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         throw error
 
     fetcher
-
-  
-  ###
-  Helper for building the right object for the $.ajax method.
-
-  @param [String] method  URL request method
-  @param [String] url   URL to be requested
-  @param [Object] data  Data to be send
-  ###
-
-  @_build_ajax_data = ( method, url, data ) ->
-    data = 
-      url   : url
-      type  : method
-      data  : data
-
-    temp = url.split(".")
-    if temp[ temp.length - 1 ] is "json"
-      data.dataType = "json"
-
-    data
-
 
   ###
   Builds local getters/setters for the given params
