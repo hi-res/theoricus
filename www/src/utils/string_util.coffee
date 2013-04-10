@@ -15,6 +15,8 @@ class theoricus.utils.StringUtil
     parts = [].concat( str.split "_" )
     buffer = ""
     buffer += StringUtil.ucfirst part for part in parts
+    # some weirdness happening if we don't return the buffer
+    return buffer
 
   ###
   @param [String] str
