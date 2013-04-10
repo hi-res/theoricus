@@ -89,11 +89,13 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
   @param [Object] data  Data to be send
   ###
   @_request = ( method, url, data='' ) ->
-    # console.error "[Model] request", method, url, data
+    console.log "[Model] request", method, url, data
 
     fetcher = new theoricus.mvc.lib.Fetcher
 
-    req = $.ajax url:url, type: method, data: data
+    ajax_data = @_build_ajax_data method, url, data
+
+    req = $.ajax ajax_data
 
     req.done ( data )=>
       fetcher.loaded = true
@@ -108,6 +110,28 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         throw error
 
     fetcher
+
+  
+  ###
+  Helper for building the right object for the $.ajax method.
+
+  @param [String] method  URL request method
+  @param [String] url   URL to be requested
+  @param [Object] data  Data to be send
+  ###
+
+  @_build_ajax_data = ( method, url, data ) ->
+    data = 
+      url   : url
+      type  : method
+      data  : data
+
+    temp = url.split(".")
+    if temp[ temp.length - 1 ] is "json"
+      data.dataType = "json"
+
+    data
+
 
   ###
   Builds local getters/setters for the given params
@@ -138,8 +162,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         msg = "Property '#{prop}' must to be #{stype}."
         throw new Error msg
 
-    @::.__defineGetter__ field, getter
-    @::.__defineSetter__ field, setter
+    Object.defineProperty @::, field, get:getter, set:setter
 
 
 
