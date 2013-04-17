@@ -42,6 +42,10 @@ class theoricus.commands.Add extends theoricus.generators.Question
     new (Model)( @the, name, args )
 
   view:( path )->
+
+    # remove first char if its a slash
+    path = path.replace /^\//, ''
+
     folder = (parts = path.split '/')[0]
     name   =  parts[1]
 
