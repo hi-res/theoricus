@@ -11,26 +11,6 @@ class theoricus.mvc.Controller
   ###
   _boot: ( @the ) -> @
 
-  ###
-  Build a default action ( renders the view passing all model records as data)
-  in case the controller doesn't have an action for current process call
-
-  @param [theoricus.core.Process] process path to view on the app tree
-  ###
-  _build_action: ( process ) ->
-    =>
-      api = process.route.api
-
-      model_name = api.controller_name.singularize().camelize()
-      model      = app.models[model_name]
-
-      view_folder = api.controller_name.singularize()
-      view_name   = api.action_name
-
-      if model.all?
-        @render "#{view_folder}/#{view_name}", model.all()
-      else
-        @render "#{view_folder}/#{view_name}", null
 
   ###
   Renders view
@@ -40,9 +20,10 @@ class theoricus.mvc.Controller
   @param [Object] element element where it will be rendered, defaults to @process.route.el
   ###
   render: ( path, data, el = @process.route.el, view ) ->
-    view = view || @the.factory.view path, @process
 
-    view.after_in = view.process.after_run
+    # TODO: refactor this into "render" method @ process
+    # 
+    view = view || @the.factory.view path, @process
 
     if data instanceof Fetcher
       if data.loaded
@@ -52,5 +33,24 @@ class theoricus.mvc.Controller
           @render path, records, el, view
     else
       view.render data, el
+
+
+      # If user don't call the callback, callback will be executed automatically
+      # http://jsfiddle.net/hems/bs4gz/1/
+      
+      view_didnt_shout = true
+
+      shout = ( type ) ->
+        if view_didnt_shout is false
+          console.warn 'You can only request one shout.'
+          return 
+
+        view_didnt_shout = false
+
+        return view.process.after_run
+
+      view.in( shout )
+
+      shout()( 'automaticaly' ) if view_didnt_shout
 
     view

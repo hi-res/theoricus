@@ -48,8 +48,6 @@ class theoricus.mvc.View
       if (@data instanceof theoricus.mvc.Model)
         @data.bind dom, !@the.config.autobind
 
-      @in()
-
     @set_triggers?()
 
     @after_render?(@data)
@@ -89,35 +87,53 @@ class theoricus.mvc.View
     @el.empty()
 
   ###
-  Triggers view "animation in", "@after_in" must be called in the end
+  Should execute view transition in.
+
+  In case you transition isn't syncoronous ( i.e. has animation )
+  you should execute the method "shout" given as argument.
+
+  It will it will return a callback which will notify the current process
+  your view just got rendered ( i.e. animation finished )
+
+  @param [Function] shout Return a framework "continue signal"
+
+  NOTE: If you execute shout, and then cancel your transition, the framework
+  will never now your view finished the transition in
   ###
-  in:()->
+  in:( shout )->
     @before_in?()
 
-    animate  = @the.config.enable_auto_transitions
-    animate &= !@the.config.disable_transitions
+    dont_have_transition  =  @the.config.enable_auto_transitions
+    dont_have_transition &= !@the.config.disable_transitions
 
-    unless animate
-      @after_in?()
-    else
-      @el.css "opacity", 0
-      @el.animate {opacity: 1}, 600, => @after_in?()
+    return if dont_have_transition
+
+    @el.css "opacity", 0
+    @el.animate {opacity: 1}, 600, shout?( 'view ')
 
   ###
-  Triggers view "animation out", "after_out" must be called in the end
+  Should execute view transition out.
 
-  @param [Function] after_out Callback function to be triggered in the end
+  In case you transition isn't syncoronous ( i.e. has animation )
+  you should execute the method "shout" given as argument.
+
+  It will it will return a callback which will notify the current process
+  your view just got rendered ( i.e. animation finished )
+
+  @param [Function] shout Return a framework "continue signal"
+
+  NOTE: If you execute shout, and then cancel your transition, the framework
+  will never now your view finished the transition in
   ###
-  out:( after_out )->
+  out:( shout )->
     @before_out?()
 
-    animate  = @the.config.enable_auto_transitions
-    animate &= !@the.config.disable_transitions
+    dont_have_transition  =  @the.config.enable_auto_transitions
+    dont_have_transition &= !@the.config.disable_transitions
 
-    unless animate
-      after_out()
-    else
-      @el.animate {opacity: 0}, 300, after_out
+    return if dont_have_transition
+
+    @el.animate {opacity: 0}, 300, shout?( 'view' )
 
   # ~> Shortcuts
 

@@ -33,9 +33,27 @@ class theoricus.core.Process
   @return [theoricus.mvc.View] view
   ###
   run:( after_run )->
+
     # if action is not defined, defines the default action behaviour for it
     unless @controller[ action = @route.api.action_name ]
-      @controller[ action ] = @controller._build_action @
+
+      ###
+      Build a default action ( renders the view passing all model records as data)
+      in case the controller doesn't have an action for current process call
+      ###
+      @controller[ action ] = =>
+        api = @route.api
+
+        model_name = api.controller_name.singularize().camelize()
+        model      = app.models[model_name]
+
+        view_folder = api.controller_name.singularize()
+        view_name   = api.action_name
+
+        if model.all?
+          @controller.render "#{view_folder}/#{view_name}", model.all()
+        else
+          @controller.render "#{view_folder}/#{view_name}", null
 
     # inject the current process into controller
     @controller.process = @
@@ -47,6 +65,9 @@ class theoricus.core.Process
 
     # executes the action and catches the resulting view
     @view = @controller[ action ].apply @controller, @route.api.params
+
+    # validate if controller method returned a view instance
+    # this is specially for "rendering processes"
     unless @view instanceof theoricus.mvc.View
       controller_name = @route.api.controller_name.camelize()
       msg = "Check your `#{controller_name}` controller, the action "
@@ -70,6 +91,22 @@ class theoricus.core.Process
       console.error msg
       return
 
-    @view.out =>
-      @view.destroy()
-      @after_destroy?()
+    # this is a "Shout pattern experiment", check the insight here
+    # http://jsfiddle.net/hems/bs4gz/
+
+    view_didnt_shout = true
+
+    shout = ( type ) =>
+      if view_didnt_shout is false
+        console.warn 'You can only request one shout.'
+        return 
+
+      view_didnt_shout = false
+
+      return =>
+        @view.destroy()
+        @after_destroy?()
+
+    @view.out( shout )
+
+    shout()( 'automaticaly' ) if view_didnt_shout
