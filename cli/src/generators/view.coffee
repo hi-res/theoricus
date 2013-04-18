@@ -15,8 +15,8 @@ class theoricus.generators.View
     else
       view_path = "#{view_folder}/#{name_lc}.coffee"
 
-    jade_path = "#{static_folder}/index.jade"
-    styl_path = "#{static_folder}/index.styl"
+    jade_path = "#{static_folder}/#{name_lc}.jade"
+    styl_path = "#{static_folder}/#{name_lc}.styl"
 
     # prepare contents
     tmpl_path = "#{@the.root}/cli/src/generators/templates/mvc"
