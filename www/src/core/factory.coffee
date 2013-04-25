@@ -52,6 +52,9 @@ class theoricus.core.Factory
   @param [theoricus.core.Process] process process responsible for the view
   ###
   view:( path, process = null )->
+    # remove slash if it happens on first or last char
+    path = path.replace /^\/|\/$/g, ''
+    
     # console.log "Factory.view( '#{path}' )"
 
     klass = app.views
@@ -132,6 +135,9 @@ class theoricus.core.Factory
   @param [String] path  path to the template
   ###
   @template=@::template=( path )->
+    # remove slash if it happens on first or last char
+    path = path.replace /^\/|\/$/g, ''
+
     # console.log "Factory.template( #{path} )"
 
     if app.templates[path]?
