@@ -1,7 +1,7 @@
 # Theoricus #
 
 Minimalist MVC implementation for CoffeeScript.
-> Version 0.1.9 ( yeah, almost 0.2 !!! we're very humble regarding version numbers )
+> Version 0.2 ( don't be afraid ! we're humble regarding version numbers )
 
 # Features
  * Routes system
