@@ -103,10 +103,10 @@ class theoricus.mvc.View
   in:( shout )->
     @before_in?()
 
-    dont_have_transition  =  @the.config.enable_auto_transitions
-    dont_have_transition &= !@the.config.disable_transitions
+    enabled_transitions  =  @the.config.enable_auto_transitions
+    enabled_transitions &= !@the.config.disable_transitions
 
-    return if dont_have_transition
+    return unless enabled_transitions
 
     @el.css "opacity", 0
     @el.animate {opacity: 1}, 600, shout?( 'view ')
@@ -128,10 +128,10 @@ class theoricus.mvc.View
   out:( shout )->
     @before_out?()
 
-    dont_have_transition  =  @the.config.enable_auto_transitions
-    dont_have_transition &= !@the.config.disable_transitions
+    enabled_transitions  =  @the.config.enable_auto_transitions
+    enabled_transitions &= !@the.config.disable_transitions
 
-    return if dont_have_transition
+    return unless enabled_transitions
 
     @el.animate {opacity: 0}, 300, shout?( 'view' )
 

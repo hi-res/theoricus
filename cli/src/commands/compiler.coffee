@@ -160,10 +160,16 @@ class theoricus.commands.Compiler
 
 
   compile_stylus:( after_compile )->
+    # The global files folder
+    global_folder = "#{@APP_FOLDER}/static/_boot/stylus/"
+    # All the files to import as 'global'
+    global_files = fsu.find global_folder, /.styl$/
+
     files = fsu.find "#{@APP_FOLDER}/static", /.styl$/
     
     buffer = []
     @pending_stylus = 0
+
     for file in files
       # skip files that starts with "_"
       @pending_stylus++ unless file.match( /(\_)?[^\/]+$/ )[1] is "_"
@@ -174,14 +180,17 @@ class theoricus.commands.Compiler
       continue if file.match( /(\_)?[^\/]+$/ )[1] is "_"
 
       source = fs.readFileSync file, "utf-8"
-      paths = [
-        "#{@APP_FOLDER}/static/_mixins/stylus"
-      ]
-
+      
       # TODO: move compile options to config file
-      stylus( source )
+
+      s = stylus( source )
+      # First of all, import all the global files
+      for global_file in global_files
+        s.import( global_file )
+        
+      # Then, continue with the remaining compiling passes
+      s 
         .set( 'filename', file )
-        .set( 'paths', paths )
         .use( nib() )
         .import( 'nib' )
         .render (err, css)=>

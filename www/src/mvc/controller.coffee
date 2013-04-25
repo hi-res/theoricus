@@ -34,7 +34,6 @@ class theoricus.mvc.Controller
     else
       view.render data, el
 
-
       # If user don't call the callback, callback will be executed automatically
       # http://jsfiddle.net/hems/bs4gz/1/
       
@@ -51,6 +50,6 @@ class theoricus.mvc.Controller
 
       view.in( shout )
 
-      shout()( 'automaticaly' ) if view_didnt_shout
+      if view_didnt_shout then shout()( 'automaticaly' )
 
     view

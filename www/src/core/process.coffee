@@ -109,4 +109,4 @@ class theoricus.core.Process
 
     @view.out( shout )
 
-    shout()( 'automaticaly' ) if view_didnt_shout
+    if view_didnt_shout then shout()( 'automaticaly' )

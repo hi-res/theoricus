@@ -57,7 +57,10 @@ class theoricus.commands.Server
 
         filename = path.join( @root, "/index.html" )
         file = fs.readFileSync( filename , "utf-8")
-        response.writeHead 200, {"Content-Type": "text/html"}
+
+        response.writeHead 200,
+          "Content-Type": "text/html"
+          'Access-Control-Allow-Origin' : '*'
 
         if crawl is true
           cache = pn "#{@root}/static/#{request.url}/index.html"
@@ -75,23 +78,42 @@ class theoricus.commands.Server
 
       fs.readFile filename, "binary", (err, file)->
         if err
-          response.writeHead 500, {"Content-Type": "text/plain"}
+          response.writeHead 500, 
+            "Content-Type": "text/plain"
+            'Access-Control-Allow-Origin' : '*'
+
           response.write err + "\n"
           response.end()
           return
 
         if filename.match /.js$/m
-          response.writeHead 200, {"Content-Type": "text/javascript"}
+          response.writeHead 200, 
+            "Content-Type": "text/javascript"
+            'Access-Control-Allow-Origin' : '*'
         else if (mime = filename.match /(jpg|png|gif)$/m)
-          response.writeHead 200, {"Content-Type": "image/#{mime[1]}"}
+          response.writeHead 200, 
+            "Content-Type": "image/#{mime[1]}"
+            'Access-Control-Allow-Origin' : '*'
         else if filename.match /.css$/m
-          response.writeHead 200, {"Content-Type": "text/css"}
+          response.writeHead 200, 
+            "Content-Type": "text/css"
+            'Access-Control-Allow-Origin' : '*'
         else if filename.match /.woff$/m
-          response.writeHead 200, {"Content-Type": "font/opentype"}
+          response.writeHead 200,
+            "Content-Type": "application/x-font-woff"
+            'Access-Control-Allow-Origin' : '*'
         else if filename.match /.ttf$/m
-          response.writeHead 200, {"Content-Type": "font/opentype"}
+          response.writeHead 200, 
+            "Content-Type": "application/x-font-ttf"
+            'Access-Control-Allow-Origin' : '*'
+        else if filename.match /.eot$/m
+          response.writeHead 200, 
+            "Content-Type": "application/vnd.ms-fontobject"
+            'Access-Control-Allow-Origin' : '*'
         else if filename.match /.json$/m
-          response.writeHead 200, {"Content-Type": "application/json"}
+          response.writeHead 200, 
+            "Content-Type": "application/json"
+            'Access-Control-Allow-Origin' : '*'
 
         response.write file, "binary"
         response.end()

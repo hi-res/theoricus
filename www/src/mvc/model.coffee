@@ -41,8 +41,13 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
 
     return call = ( args... ) ->
 
-      # console.log 'calling -->', key, method, url, domain, args
+      
 
+      if domain? && domain.substring( domain.length - 1 ) is "/"
+        domain = domain.substring 0, domain.length - 1
+
+      #console.log 'calling -->', key, method, url, domain, args
+      
       # when asking to read a registry, check if it was already loaded
       # if so, return the cached entry
       if key is "read" and @_collection.length
@@ -115,7 +120,8 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
       if fetcher.onerror?
         fetcher.onerror error
       else
-        throw error
+          console.log error
+          
 
     fetcher
 
