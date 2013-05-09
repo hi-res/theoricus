@@ -60,13 +60,10 @@ class theoricus.core.Factory
     classname = (parts = path.split '/').pop()
     classname = theoricus.utils.StringUtil.camelize classname
 
-    # Building the path for the class, without the class name
-    path = path.split '/'
-    path.pop()
-    path = path.join '/'
-
-    len = parts.length - 1
-    namespace  = parts[ len ]
+    # Building the namespace for the class, without the class name
+    namespace  = path.split '/'
+    namespace.pop()
+    namespace = namespace.join '.'
     
     while parts.length
       classpath += "." + (p = parts.shift())
@@ -89,7 +86,6 @@ class theoricus.core.Factory
     view = new app.AppView unless view?
 
     view._boot @the
-    view.path = path
     view.classpath = classpath
     view.classname = classname
     view.namespace = namespace
