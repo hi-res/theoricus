@@ -36,7 +36,11 @@ class theoricus.mvc.View
 
       if template == null
 
-        tmpl_folder = @namespace.singularize()
+        #tmpl_folder = @namespace.singularize()
+
+        # Replace points with slashes
+        tmpl_folder = @namespace.replace(/\./g, '/')
+        # Undescorize the class name
         tmpl_name   = @classname.underscore()
 
         template = Factory.template "#{tmpl_folder}/#{tmpl_name}"

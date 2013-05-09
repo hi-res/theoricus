@@ -54,17 +54,17 @@ class theoricus.core.Factory
   view:( path, process = null )->
     # remove slash if it happens on first or last char
     path = path.replace /^\/|\/$/g, ''
-    
-    # console.log "Factory.view( '#{path}' )"
 
     klass = app.views
     classpath = "app.views"
     classname = (parts = path.split '/').pop()
     classname = theoricus.utils.StringUtil.camelize classname
 
-    len = parts.length - 1
-    namespace  = parts[ len ]
-
+    # Building the namespace for the class, without the class name
+    namespace  = path.split '/'
+    namespace.pop()
+    namespace = namespace.join '.'
+    
     while parts.length
       classpath += "." + (p = parts.shift())
 
@@ -72,7 +72,6 @@ class theoricus.core.Factory
         klass = klass[p]
       else
         console.error "Namespace '#{p} not found in app.views..."
-
 
     classpath += "." + classname
 
@@ -138,7 +137,7 @@ class theoricus.core.Factory
     # remove slash if it happens on first or last char
     path = path.replace /^\/|\/$/g, ''
 
-    # console.log "Factory.template( #{path} )"
+    #console.log "Factory.template( #{path} )"
 
     if app.templates[path]?
       return app.templates[path]
