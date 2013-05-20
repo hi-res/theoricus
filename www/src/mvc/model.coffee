@@ -82,7 +82,7 @@ class theoricus.mvc.Model extends theoricus.mvc.lib.Binder
         r_url = url.replace /:[a-z]+/, args.shift() || null
 
       # if domain is specified we prepend to the url
-      r_url = "#{domain}/#{r_url}" if domain?
+      r_url = "#{domain}#{r_url}" if domain?
 
       @_request method, r_url, data
 
