@@ -21,10 +21,6 @@ class theoricus.commands.Compiler
     @BASE_DIR = @the.pwd
     @APP_FOLDER = "#{@BASE_DIR}/app"
 
-
-    console.error 'options are:', options
-
-
     # when running theoricus compile
     if watch == false
 
