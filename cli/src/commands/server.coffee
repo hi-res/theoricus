@@ -13,7 +13,7 @@ class theoricus.commands.Server
 
     # console.log  "Server is born()"
     @start_server()
-    @compiler = new theoricus.commands.Compiler @the, true
+    @compiler = new theoricus.commands.Compiler @the, true, options
 
   start_server:()->
     @server = http.createServer( @_handler )

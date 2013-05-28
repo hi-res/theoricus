@@ -68,7 +68,7 @@ class theoricus.Theoricus
       when "rm"      then new theoricus.commands.Rm @, options
       when "start"   then new theoricus.commands.Server @, options
       when "static"  then new theoricus.commands.StaticServer @, options
-      when "compile" then new theoricus.commands.Compiler @, options
+      when "compile" then new theoricus.commands.Compiler @, false, options
       when "index"   then new theoricus.commands.Index @, options
       when "version"
         console.log @version

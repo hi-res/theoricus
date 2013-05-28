@@ -15,17 +15,38 @@ class theoricus.commands.Compiler
   BASE_DIR: ""
   APP_FOLDER: ""
 
-  constructor:( @the, watch = false )->
+  constructor:( @the, watch = false, options )->
 
+    @watch = watch
     @BASE_DIR = @the.pwd
     @APP_FOLDER = "#{@BASE_DIR}/app"
 
-    config =
+
+    console.error 'options are:', options
+
+
+    # when running theoricus compile
+    if watch == false
+
+      js_release  = options[1] || 'app.js'
+      css_release = options[2] || 'app.css'
+
+    # when running theoricus start
+    else
+
+      js_release  = options[2] || 'app.js'
+      css_release = options[3] || 'app.css'
+
+
+    # console.warn 'options are:', options[3]
+
+    @release_config = config =
       folders: {}
       vendors:@_get_vendors()
       minify: false
-      release: "public/app.js"
+      release: "public/" + js_release
       debug: "public/app-debug.js"
+      css_release: "public/" + css_release
 
     config.folders[@APP_FOLDER] = "app"
 
@@ -112,7 +133,7 @@ class theoricus.commands.Compiler
     else if f.location.match /.styl$/m
 
       @compile_stylus ( css )=>
-        target = "#{@the.pwd}/public/app.css"
+        target = "#{@the.pwd}/" + @release_config.css_release
         fs.writeFileSync target, css
         console.log "[#{now}] #{'Compiled'.bold} #{target}".green
 
@@ -240,9 +261,13 @@ class theoricus.commands.Compiler
 
     # compile sytlus
     @compile_stylus ( css )=>
-      target = "#{@the.pwd}/public/app.css"
+      target = "#{@the.pwd}/" + @release_config.css_release
       fs.writeFileSync target, css
       console.log "[#{now}] #{'Compiled'.bold} #{target}".green
+
+      process.exit(0) if @watch != true
+
+
 
 
   _get_config:()->
