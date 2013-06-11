@@ -14,7 +14,6 @@ toast 'www/src'
     "www/vendors/history.js/scripts/bundled/html4+html5/native.history.js"
     "www/vendors/jade/runtime.js"
     "www/vendors/inflection.js"
-    "www/vendors/jquery.js"
     "www/vendors/JSON-js/json2.js"
   ]
   minify: false

@@ -178,7 +178,7 @@ class theoricus.mvc.View
         container = @el.find container
 
       # if user passes an object ref, jQuerify it 
-      unless container instanceof jQuery
+      unless container instanceof $
         container = $ container
 
       view.render data, @el.find container, template
