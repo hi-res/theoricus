@@ -37,7 +37,7 @@ class theoricus.commands.Server
 
     headers = request.headers
     agent = headers['user-agent']
-    crawl = agent.indexOf( "Googlebot" ) >= 0 || agent.indexOf( "curl" ) >= 0
+    crawl = agent == undefined || agent.indexOf( "Googlebot" ) >= 0 || agent.indexOf( "curl" ) >= 0
 
     uri = url.parse( request.url ).pathname
     filename = path.join( @root, uri )
