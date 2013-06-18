@@ -16,6 +16,9 @@ class theoricus.core.Process
   # @property [theoricus.core.Route] route
   route: null
 
+  # on if the applicaton will handle the transitions by itself
+  no_render: off
+
   ###
   Instantiate controller responsible for the route
   
@@ -50,7 +53,7 @@ class theoricus.core.Process
         view_folder = api.controller_name.singularize()
         view_name   = api.action_name
 
-        if model.all?
+        if model?.all?
           @controller.render "#{view_folder}/#{view_name}", model.all()
         else
           @controller.render "#{view_folder}/#{view_name}", null
@@ -66,6 +69,10 @@ class theoricus.core.Process
     # executes the action and catches the resulting view
     @view = @controller[ action ].apply @controller, @route.api.params
 
+    # if the controller decides to handle the render by itself
+    # we'll execute the callback
+    if @no_render then return
+
     # validate if controller method returned a view instance
     # this is specially for "rendering processes"
     unless @view instanceof theoricus.mvc.View
@@ -80,33 +87,12 @@ class theoricus.core.Process
   
   @return [theoricus.mvc.View] view
   ###
-  destroy:( @after_destroy )->
-    # call the OUT transition with the given callback
-    unless (@view instanceof theoricus.mvc.View)
-      controller_name = @route.api.controller_name.camelize()
-      action_name = @route.api.action_name
-      msg = "Can't destroy View because it isn't a proper View instance. "
-      msg += "Check your `#{controller_name}` controller, the action "
-      msg += "`#{action_name}` must return a View instance."
-      console.error msg
-      return
+  destroy:( after_destroy )->
 
-    # this is a "Shout pattern experiment", check the insight here
-    # http://jsfiddle.net/hems/bs4gz/
+    @controller.process = @
 
-    view_didnt_shout = true
+    @after_destroy = =>
+      @controller.process = null
+      after_destroy()
 
-    shout = ( type ) =>
-      if view_didnt_shout is false
-        console.warn 'You can only request one shout.'
-        return 
-
-      view_didnt_shout = false
-
-      return =>
-        @view.destroy()
-        @after_destroy?()
-
-    @view.out( shout )
-
-    if view_didnt_shout then shout()( 'automaticaly' )
+    @controller.destroy @after_destroy
