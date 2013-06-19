@@ -76,7 +76,15 @@ class theoricus.core.Processes
 
       if route?
         process = new theoricus.core.Process @the, route.item.clone()
+
+        search  = route: match: process.route.match
+        found = ArrayUtil.find( @active_processes, search )?
+
+        if found
+          process.active = true
+        
         @pending_processes.push process
+
         break if route.target_route is null
       else
         console.log "ERROR: Dependency not found at=#{process.route.at}"
@@ -118,6 +126,17 @@ class theoricus.core.Processes
       search = route: match: process.route.match
       ArrayUtil.delete @active_processes, search
     else
+
+      # console.log " ~~> _run_pending_processes:", @pending_processes
+
+      # for pending in @pending_processes
+      #   console.warn '---'
+      #   console.log pending.route.api.controller_name
+      #   console.log pending.route.api.action_name
+      #   console.log pending.route.api.params
+      #   console.error 'active? ' + pending.active
+      #   console.warn '---'
+
       @_run_pending_processes()
 
   ###
@@ -125,12 +144,14 @@ class theoricus.core.Processes
   Execute run method of pending processes that are not active
   ###
   _run_pending_processes:()=>
+
     if @pending_processes.length
+
       process = @pending_processes.pop()
       search  = route: match: process.route.match
       found = ArrayUtil.find( @active_processes, search )?
 
-      if not found
+      if not found or not process.active
         @active_processes.push process
         process.run @_run_pending_processes
       else
