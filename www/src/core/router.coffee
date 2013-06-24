@@ -58,6 +58,8 @@ class theoricus.core.Router
       #remove base path from incoming url
       ( url = url.replace @the.base_path, '' ) if @the.base_path?
       
+      # console.warn "calling url #{url}"
+      
       # removes the prepended '.' from HistoryJS
       url = url.slice 1 if (url.slice 0, 1) is '.'
 
