@@ -45,12 +45,8 @@ class theoricus.mvc.View
 
         template = Factory.template "#{tmpl_folder}/#{tmpl_name}"
 
-      dom = template(@data) if template?
-      dom = @el.append dom
 
-      # binds item if the data passed is a valid Model
-      if (@data instanceof theoricus.mvc.Model)
-        @data.bind dom, !@the.config.autobind
+      @_render_template template, @data
 
     @set_triggers?()
 
@@ -64,6 +60,10 @@ class theoricus.mvc.View
       $( window ).unbind 'resize', @on_resize
       $( window ).bind   'resize', @on_resize
       @on_resize()
+
+  _render_template: ( template, @data ) =>
+      dom = template(@data) if template?
+      dom = @el.append dom  if dom?
 
   ###
   In case you defined @events in your view they will be automatically binded
