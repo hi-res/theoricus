@@ -146,8 +146,9 @@ class theoricus.mvc.View
 
   @param [String] url URL to navigate
   ###
-  navigate:( url )->
-    @the.processes.router.navigate url
+  navigate:( url, trigger = true, replace = false )->
+    @the.processes.router.navigate url, trigger, replace
+
 
   ###
   Shortcut for Factory.view method
