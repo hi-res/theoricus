@@ -94,6 +94,10 @@ class theoricus.commands.Server
           response.writeHead 200, 
             "Content-Type": "image/#{mime[1]}"
             'Access-Control-Allow-Origin' : '*'
+        else if filename.match /.svg$/m
+          response.writeHead 200, 
+            "Content-Type": "image/svg+xml"
+            'Access-Control-Allow-Origin' : '*'
         else if filename.match /.css$/m
           response.writeHead 200, 
             "Content-Type": "text/css"
