@@ -8,6 +8,7 @@ class theoricus.commands.Compiler
 
   jade = require "jade"
   stylus = require "stylus"
+  nodes  = stylus.nodes
 
   Toaster = require( 'coffee-toaster' ).Toaster
   {FnUtil,ArrayUtil} = require( 'coffee-toaster' ).toaster.utils
@@ -43,6 +44,7 @@ class theoricus.commands.Compiler
       release: "public/" + js_release
       debug: "public/app-debug.js"
       css_release: "public/" + css_release
+      css_basepath: ''
 
     config.folders[@APP_FOLDER] = "app"
 
@@ -204,11 +206,15 @@ class theoricus.commands.Compiler
       # First of all, import all the global files
       for global_file in global_files
         s.import( global_file )
+
+      url_func = (url) =>
+        new nodes.Literal( 'url(' + new nodes.String(@release_config.css_basepath + url.val) + ')' )
         
       # Then, continue with the remaining compiling passes
       s 
         .set( 'filename', file )
         .use( nib() )
+        .define('url', url_func)
         .import( 'nib' )
         .render (err, css)=>
           throw err if err?
