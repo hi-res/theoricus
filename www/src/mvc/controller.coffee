@@ -29,7 +29,13 @@ class theoricus.mvc.Controller
       if data.loaded
         view.render data.records, el
       else
+
+        @before_load_data?()
+
         data.onload = ( records ) =>
+
+          @after_load_data?()
+
           @render path, records, el, view
     else
       view.render data, el
