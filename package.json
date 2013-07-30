@@ -1,6 +1,6 @@
 {
   "name": "theoricus",
-  "version": "0.1.9",
+  "version": "0.2.1",
   "author": "Anderson Arboleya <anderson@arboleya.me>, Henrique Matias <hems.inlet@gmail.com>",
   "description" : "Minimalist MVC implementation for CoffeeScript.",
   "keywords": ["coffeescript", "mvc", "framework"],
