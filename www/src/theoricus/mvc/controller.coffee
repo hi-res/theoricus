@@ -22,7 +22,7 @@ module.exports = class Controller
   Injected by {Process}, called after rendering procedure is finished,
   so {Processes} can go ahead and process the next pending one.
 
-  @property {Function} after_render
+  @property {Function} done_rendering
   ###
   done_rendering: null
 
@@ -104,7 +104,7 @@ module.exports = class Controller
   dont_render: =>
     @process.wont_render = on
 
-    @after_render()
+    @done_rendering()
 
   # ~> Shortcuts
 
