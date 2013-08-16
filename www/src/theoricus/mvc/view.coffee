@@ -92,8 +92,9 @@ module.exports = class View
     @method _render
     @param data {Object} Data object to be passed to the template, usually it is and instance of the {{#crossLink "Model"}}{{/crossLink}}
     @param [template=null] {String} The path of the template to be rendered.
+    @param [el=null] {jQuery} Element where the view will be rendered, @process.route.el in case el is null
   ###
-  _render:( data = {}, template )=>
+  _render:( data = {}, template, el )=>
     @data = 
       view: @
       params: @process.params
@@ -106,7 +107,7 @@ module.exports = class View
       if @title?
         document.title = @title
 
-    @el = $ @process.route.el
+    @el = el || $ @process.route.el
 
     unless template?
       tmpl_folder = @namespace.replace(/\./g, '/')
