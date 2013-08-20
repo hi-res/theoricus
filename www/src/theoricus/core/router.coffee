@@ -45,8 +45,16 @@ module.exports = class Router
     for route, opts of @Routes.routes
       @map route, opts.to, opts.at, opts.el, @
 
-    History.Adapter.bind window, 'statechange', =>
-      @route History.getState()
+    if window.history.pushState?
+
+      History.Adapter.bind window, 'statechange', =>
+        @route History.getState()
+    else
+
+      $( window ).on 'hashchange', =>
+        @route hash: window.location.hash
+
+      @route hash: window.location.hash
 
     setTimeout =>
       url = window.location.pathname
@@ -79,7 +87,7 @@ module.exports = class Router
       url = state.hash || state.title
 
       # FIXME: quickfix for IE8 bug
-      url = url.replace( '.', '' )
+      url = url.replace( '#.', '' )
 
       #remove base path from incoming url
       ( url = url.replace @the.base_path, '' ) if @the.base_path?
@@ -132,6 +140,11 @@ module.exports = class Router
   navigate:( url, trigger = true, replace = false )->
 
     if not window.history.pushState
+
+      # lets try to solve this with old-skull hash
+      return window.location.hash = "#.#{url}"
+
+      # in case you want full refresh
       return window.location = url
 
     @trigger = trigger
