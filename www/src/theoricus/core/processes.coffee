@@ -65,7 +65,10 @@ module.exports = class Processes
   ###
   _on_router_change:( route, url )=>
     if @locked
-      return @router.navigate @last_process.url, 0, 1 
+      # another hack, this time for IE8, IE9 was fine
+      url = @last_process?.url || ''
+
+      return @router.navigate url, 0, 1 
 
     @locked = true
     @the.crawler.is_rendered = false

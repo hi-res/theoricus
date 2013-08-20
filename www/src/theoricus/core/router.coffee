@@ -84,7 +84,8 @@ module.exports = class Router
     if @trigger
 
       # url from HistoryJS
-      url = state.hash || state.title
+      url = state.hash || state.title || ''
+
 
       # FIXME: quickfix for IE8 bug
       url = url.replace( '#.', '' )
