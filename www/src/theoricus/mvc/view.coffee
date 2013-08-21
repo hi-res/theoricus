@@ -96,9 +96,10 @@ module.exports = class View
   ###
   _render:( data = {}, template, el )=>
     @data = 
-      view: @
+      view  : @
       params: @process.params
-      data: data
+      data  : data
+      the   : @the
 
     @before_render?(@data)
 
