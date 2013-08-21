@@ -52,6 +52,8 @@ class theoricus.core.Router
       # url from HistoryJS
       url = state.hash || state.title
 
+      url = decodeURIComponent url
+
       # FIXME: quickfix for IE8 bug
       url = url.replace( '.', '' )
 
