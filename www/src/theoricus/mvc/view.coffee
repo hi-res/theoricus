@@ -149,6 +149,10 @@ module.exports = class View
       if @on_resize?
         $( window ).unbind 'resize', @_on_resize
         $( window ).bind   'resize', @_on_resize
+
+        $( window ).unbind 'orientationchange', @_on_resize
+        $( window ).bind   'orientationchange', @_on_resize
+        
         @on_resize()
 
   ###*
