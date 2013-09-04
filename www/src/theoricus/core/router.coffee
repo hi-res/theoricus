@@ -48,6 +48,7 @@ module.exports = class Router
     if window.history.pushState?
 
       History.Adapter.bind window, 'statechange', =>
+        @trigger = true
         @route History.getState()
     else
 
