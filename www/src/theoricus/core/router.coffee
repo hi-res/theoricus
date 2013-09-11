@@ -141,6 +141,10 @@ module.exports = class Router
 
   navigate:( url, trigger = true, replace = false )->
 
+    if @the.base_path 
+      if url.indexOf( @the.base_path ) != 0
+        url = @the.base_path + url
+
     if not window.history.pushState
 
       # lets try to solve this with old-skull hash
