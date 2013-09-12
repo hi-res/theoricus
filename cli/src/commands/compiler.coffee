@@ -25,14 +25,16 @@ class theoricus.commands.Compiler
     # when running theoricus compile
     if watch == false
 
-      js_release  = options[1] || 'app.js'
-      css_release = options[2] || 'app.css'
+      js_release    = options[1] || 'app.js'
+      css_release   = options[2] || 'app.css'
+      css_base_path = options[3] || ''
 
     # when running theoricus start
     else
 
-      js_release  = options[2] || 'app.js'
-      css_release = options[3] || 'app.css'
+      js_release    = options[2] || 'app.js'
+      css_release   = options[3] || 'app.css'
+      css_base_path = options[4] || ''
 
 
     # console.warn 'options are:', options[3]
@@ -44,7 +46,7 @@ class theoricus.commands.Compiler
       release: "public/" + js_release
       debug: "public/app-debug.js"
       css_release: "public/" + css_release
-      css_basepath: ''
+      css_basepath: css_base_path
 
     config.folders[@APP_FOLDER] = "app"
 
