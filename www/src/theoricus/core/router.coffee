@@ -11,7 +11,7 @@ Route = require 'theoricus/core/route'
 
 Factory = null
 
-if window.history.pushState then require ['history']
+require 'history'
 
 ###*
   Proxies browser's History API, routing request to and from the aplication.
