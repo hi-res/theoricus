@@ -9,9 +9,9 @@
 StringUril = require 'theoricus/utils/string_util'
 Route = require 'theoricus/core/route'
 
-require 'history'
-
 Factory = null
+
+if window.history.pushState then require ['history']
 
 ###*
   Proxies browser's History API, routing request to and from the aplication.
@@ -33,6 +33,8 @@ module.exports = class Router
   ###
   trigger: true
 
+  using_hash: false
+
   ###*
   @class Router
   @constructor
@@ -51,6 +53,8 @@ module.exports = class Router
         @trigger = true
         @route History.getState()
     else
+
+      @using_hash = true
 
       $( window ).on 'hashchange', =>
         @route hash: window.location.hash
@@ -89,13 +93,10 @@ module.exports = class Router
 
 
       # FIXME: quickfix for IE8 bug
-      url = url.replace( '#.', '' )
+      url = url.replace( '#', '' )
 
       #remove base path from incoming url
       ( url = url.replace @the.base_path, '' ) if @the.base_path?
-
-      # removes the prepended '.' from HistoryJS
-      url = url.slice 1 if (url.slice 0, 1) is '.'
 
       # adding back the first slash '/' in cases it's removed by HistoryJS
       url = "/#{url}" if (url.slice 0, 1) isnt '/'
@@ -141,14 +142,14 @@ module.exports = class Router
 
   navigate:( url, trigger = true, replace = false )->
 
-    if @the.base_path 
-      if url.indexOf( @the.base_path ) != 0
+    if @the.base_path and not @using_hash
+      if url and url.indexOf( @the.base_path ) != 0
         url = @the.base_path + url
 
     if not window.history.pushState
 
       # lets try to solve this with old-skull hash
-      return window.location.hash = "#.#{url}"
+      return window.location.hash = "##{url}"
 
       # in case you want full refresh
       return window.location = url
