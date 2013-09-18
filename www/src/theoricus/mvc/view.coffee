@@ -147,8 +147,11 @@ module.exports = class View
       @in()
 
       if @on_resize?
-        $( 'html, body' ).unbind 'resize', @_on_resize
-        $( 'html, body' ).bind   'resize', @_on_resize
+
+        @_on_resize = _.debounce @_on_resize, 300, leading: false, trailing: true
+
+        $( window ).unbind 'resize', @_on_resize
+        $( window ).bind   'resize', @_on_resize
 
         $( window ).unbind 'orientationchange', @_on_resize
         $( window ).bind   'orientationchange', @_on_resize
@@ -170,6 +173,7 @@ module.exports = class View
     @method on_resize
   ###
   _on_resize:=>
+
     @on_resize?()
 
   ###*
