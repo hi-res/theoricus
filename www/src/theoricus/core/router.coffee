@@ -47,10 +47,11 @@ module.exports = class Router
 
     if window.history.pushState?
 
-      require [ 'history'], =>
-        History.Adapter.bind window, 'statechange', =>
-          @trigger = true
-          @route History.getState()
+      require 'history'
+      
+      History.Adapter.bind window, 'statechange', =>
+        @trigger = true
+        @route History.getState()
 
     else
 
