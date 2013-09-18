@@ -11,8 +11,6 @@ Route = require 'theoricus/core/route'
 
 Factory = null
 
-require 'history'
-
 ###*
   Proxies browser's History API, routing request to and from the aplication.
   @class Router
@@ -49,20 +47,33 @@ module.exports = class Router
 
     if window.history.pushState?
 
-      History.Adapter.bind window, 'statechange', =>
-        @trigger = true
-        @route History.getState()
+      require [ 'history'], =>
+        History.Adapter.bind window, 'statechange', =>
+          @trigger = true
+          @route History.getState()
+
     else
+
+      if env.PATH
+        window.location = env.BASE_PATH + '#/' + env.PATH
+        return
 
       @using_hash = true
 
       $( window ).on 'hashchange', =>
         @route hash: window.location.hash
 
-      @route hash: window.location.hash
 
     setTimeout =>
-      url = window.location.pathname
+
+      if not @using_hash
+        url = window.location.pathname
+      else
+        if window.location.hash.length
+          url = window.location.hash.replace( '#', '' )
+        else
+          url = '/'
+
       url = @Routes.root if url == "/"
       @run url
     , 1
@@ -90,9 +101,9 @@ module.exports = class Router
 
       # url from HistoryJS
       url = state.hash || state.title || ''
+      if not url.length then url ='/'
 
 
-      # FIXME: quickfix for IE8 bug
       url = url.replace( '#', '' )
 
       #remove base path from incoming url
@@ -109,11 +120,15 @@ module.exports = class Router
         if route.test url
           return @on_change route, url
 
+
+
       # if none is found, tries to render based on default
       # controller/action settings
       url_parts = (url.replace /^\//m, '').split '/'
       controller_name = url_parts[0]
       action_name = url_parts[1] or 'index'
+
+
 
       @the.factory.controller controller_name, (controller)=>
 
@@ -148,6 +163,8 @@ module.exports = class Router
 
     if not window.history.pushState
 
+      url = url.replace( @the.base_path, '' )
+      
       # lets try to solve this with old-skull hash
       return window.location.hash = "##{url}"
 
@@ -167,6 +184,7 @@ module.exports = class Router
     @param [trigger=true] {String} If false, doesn't handle the url's state.
   ###
   run:( url, trigger = true )=>
+
     ( url = url.replace @the.base_path, '' ) if @the.base_path?
 
     url = url.replace /\/$/g, ''
