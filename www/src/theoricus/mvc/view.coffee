@@ -149,7 +149,7 @@ module.exports = class View
       if @on_resize?
 
         temp_resize = => @_on_resize()
-        temp_resize = _.debounce @temp_resize, 300, leading: false, trailing: true
+        temp_resize = _.debounce temp_resize, 300, leading: false, trailing: true
 
         $( window ).unbind 'resize', temp_resize
         $( window ).bind   'resize', temp_resize
