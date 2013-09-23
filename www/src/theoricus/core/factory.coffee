@@ -40,7 +40,7 @@ module.exports = class Factory
   @param init {Object} Default properties to be setted in the model instance.
   @param fn {Function} Callback function returning the model instance.
   ###
-  @model=@::model=( name, init = {}, fn )->
+  @model=@::model=( name, init = {}, fn, copy = on )->
     # console.log "Factory.model( '#{name}' )"
 
     classname = name.camelize()
@@ -50,7 +50,7 @@ module.exports = class Factory
       console.error "Model not found '#{classpath}'"
       return fn null
 
-    unless (model = new ModelClass) instanceof Model
+    unless (model = new ModelClass( init )) instanceof Model
       msg = "#{classpath} is not a Model instance, you probably forgot to "
       msg += "extend thoricus/mvc/Model"
       console.error msg
@@ -58,7 +58,8 @@ module.exports = class Factory
 
     model.classpath = classpath
     model.classname = classname
-    model[prop] = value for prop, value of init
+    if copy
+      model[prop] = value for prop, value of init
 
     fn model
 
