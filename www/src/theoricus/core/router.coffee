@@ -9,8 +9,6 @@
 StringUril = require 'theoricus/utils/string_util'
 Route = require 'theoricus/core/route'
 
-require '../../../vendors/history'
-
 Factory = null
 
 ###*
@@ -35,6 +33,13 @@ module.exports = class Router
   trigger: true
 
   ###*
+    True if using hashchange instead of pushstate
+
+    @property {Boolean} trigger
+  ###
+  using_hash: false
+
+  ###*
   @class Router
   @constructor
   @param @the {Theoricus} Shortcut for app's instance.
@@ -47,13 +52,38 @@ module.exports = class Router
     for route, opts of @Routes.routes
       @map route, opts.to, opts.at, opts.el, @
 
-    History.Adapter.bind window, 'statechange', =>
-      @route History.getState()
+    if window.history.pushState?
+
+      require '../../../vendors/history'
+      
+      History.Adapter.bind window, 'statechange', =>
+        @trigger = true
+        @route History.getState()
+
+    else
+
+      if @the.base_path
+        window.location = @the.base_path + '#/' + env.PATH
+        return
+
+      @using_hash = true
+
+      $( window ).on 'hashchange', =>
+        @route hash: window.location.hash
 
     setTimeout =>
-      url = window.location.pathname
+
+      if not @using_hash
+        url = window.location.pathname
+      else
+        if window.location.hash.length
+          url = window.location.hash.replace( '#', '' )
+        else
+          url = '/'
+
       url = @Routes.root if url == "/"
       @run url
+      
     , 1
 
   ###*
@@ -133,7 +163,19 @@ module.exports = class Router
 
   navigate:( url, trigger = true, replace = false )->
 
+    if @the.base_path and not @using_hash
+      if url and url.indexOf( @the.base_path ) != 0
+        url = @the.base_path + url
+
+    # if we don't have pushstate, fallback to hash
     if not window.history.pushState
+
+      url = url.replace( @the.base_path, '' )
+      
+      # lets try to solve this with old-skull hash
+      return window.location.hash = "##{url}"
+
+      # in case you want full refresh
       return window.location = url
 
     @trigger = trigger
