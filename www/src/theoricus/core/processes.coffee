@@ -110,6 +110,9 @@ module.exports = class Processes
       @last_process = process
 
       @pending_processes = []
+
+      process.is_new = true
+
       @_filter_pending_processes process, =>
         do @_filter_dead_processes
         do @_destroy_dead_processes
@@ -193,7 +196,7 @@ module.exports = class Processes
 
       # and checks if it's present in the pending_processes as well
       process = _.find @pending_processes, (item)->
-        return item.url is active.url
+        return item.url is active.url and not item.is_new
 
       if process?
         url = process.url
