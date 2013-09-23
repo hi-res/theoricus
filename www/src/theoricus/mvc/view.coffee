@@ -266,5 +266,5 @@ module.exports = class View
     @method navigate
     @param url {String} URL to navigate to.
   ###
-  navigate:( url )->
-    @the.processes.router.navigate url
+  navigate:( url, trigger )->
+    @the.processes.router.navigate url, trigger
