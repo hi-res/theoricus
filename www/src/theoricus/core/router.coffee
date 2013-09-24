@@ -61,14 +61,16 @@ module.exports = class Router
 
     else
 
-      if @the.base_path
-        window.location = @the.base_path + '#/' + env.PATH
+      if @the.path
+        window.location = @the.base_path + '#/' + @the.path
         return
 
       @using_hash = true
 
       $( window ).on 'hashchange', =>
-        @route hash: window.location.hash
+
+        console.log "hash changed -> #{window.location.hash}"
+        @route hash: window.location.hash.replace( '#', '' )
 
     setTimeout =>
 
@@ -81,6 +83,7 @@ module.exports = class Router
           url = '/'
 
       url = @Routes.root if url == "/"
+
       @run url
       
     , 1
@@ -117,9 +120,6 @@ module.exports = class Router
 
       #remove base path from incoming url
       ( url = url.replace @the.base_path, '' ) if @the.base_path?
-
-      # removes the prepended '.' from HistoryJS
-      url = url.slice 1 if (url.slice 0, 1) is '.'
 
       # adding back the first slash '/' in cases it's removed by HistoryJS
       url = "/#{url}" if (url.slice 0, 1) isnt '/'
