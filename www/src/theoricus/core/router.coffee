@@ -69,7 +69,7 @@ module.exports = class Router
 
       $( window ).on 'hashchange', =>
 
-        console.log "hash changed -> #{window.location.hash}"
+        # console.log "hash changed -> #{window.location.hash}"
         @route hash: window.location.hash.replace( '#', '' )
 
     setTimeout =>
@@ -166,6 +166,8 @@ module.exports = class Router
       if url and url.indexOf( @the.base_path ) != 0
         url = @the.base_path + url
 
+    @trigger = trigger
+
     # if we don't have pushstate, fallback to hash
     if not window.history.pushState
 
@@ -176,8 +178,6 @@ module.exports = class Router
 
       # in case you want full refresh
       return window.location = url
-
-    @trigger = trigger
 
     action   = if replace then "replaceState" else "pushState"
     History[action] null, null, url
