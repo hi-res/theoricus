@@ -114,7 +114,7 @@ module.exports = class Model extends Binder
       fetcher.loaded = true
       @_instantiate ([].concat data), (results)->
         fetcher.records = results
-        fetcher.onload?( fetcher.records )
+        fetcher.load results
 
     req.error ( error )=>
       fetcher.error = true
