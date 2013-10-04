@@ -134,8 +134,9 @@ module.exports = class View
 
     @the.factory.template template, ( template ) =>
 
-      dom = template @data
-      dom = @el.append dom
+      dom = $ template @data
+      @el.append dom
+      @el = dom
 
       # binds item if the data passed is a valid Model
       if (@data instanceof Model)
