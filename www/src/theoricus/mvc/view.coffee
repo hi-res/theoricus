@@ -116,6 +116,17 @@ module.exports = class View
 
     @render_template template
 
+    @set_triggers?()
+    @after_render?(@data)
+
+    if @on_resize?
+      $( window ).unbind 'resize', @_on_resize
+      $( window ).bind   'resize', @_on_resize
+      @on_resize()
+
+
+    @in()
+
   ###*
     If there is a `before_render` method implemented, it will be executed before the view's template is appended to the document.
 
@@ -141,16 +152,6 @@ module.exports = class View
       # binds item if the data passed is a valid Model
       if (@data instanceof Model)
         @data.bind dom, !@the.config.autobind
-      
-      @set_triggers?()
-      @after_render?(@data)
-
-      @in()
-
-      if @on_resize?
-        $( window ).unbind 'resize', @_on_resize
-        $( window ).bind   'resize', @_on_resize
-        @on_resize()
 
   ###*
     If there is an `after_render` method implemented, it will be executed after the view's template is appended to the document. 
@@ -256,7 +257,9 @@ module.exports = class View
     if @on_resize?
       $( window ).unbind 'resize', @_on_resize
 
-    @before_destroy?()
+    @unset_triggers?()
+    @before_destroy?(@data)
+
     @el.empty()
 
   # ~> Shortcuts
