@@ -116,8 +116,8 @@ module.exports = class View
 
     @render_template template
 
-    @set_triggers?()
     @after_render?(@data)
+    @set_triggers?()
 
     if @on_resize?
       $( window ).unbind 'resize', @_on_resize
