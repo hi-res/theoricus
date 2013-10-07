@@ -260,7 +260,7 @@ module.exports = class View
     @unset_triggers?()
     @before_destroy?(@data)
 
-    @el.empty()
+    @el.remove()
 
   # ~> Shortcuts
 
