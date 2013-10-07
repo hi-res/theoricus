@@ -185,6 +185,8 @@ module.exports = class Model extends Binder
           # when instantiate a new model instance
 
           @_collection = ( @_collection || [] ).concat records
+          # reset collection on every call
+          @_collection = [].concat records
 
           callback (if records.length is 1 then records[0] else records)
 
