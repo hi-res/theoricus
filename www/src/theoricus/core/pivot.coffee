@@ -1,6 +1,6 @@
 ###
 
-Pivot is simple key~>value storage system.
+Pivot is a simple key~>value storage system melted with a simple event system.
 
 You can set and get value using "set" and "get" methods.
 
