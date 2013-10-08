@@ -105,15 +105,16 @@ module.exports = class Pivot
 			if item.funk == funk
 				@events[ event ].listeners.splice( index, 1 )
 
-				return
+				return on
 
 		console.log "function wasnt bined to event #{event}"
+		
+		return off
 
 	# same as "on" function, but will trigger the event instantly
 	# in case the value is defined
 	bind: ( event, funk, bind = on ) ->
 		return @on event, funk, bind
-
 
 	# if the value is different from previous set or triggered value 
 	# trigger will be called in order to broadcast the new value
