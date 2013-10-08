@@ -30,7 +30,7 @@ module.exports = class PivotItem
 
 	# unregister the listener from parent
 	off: ->
-		@parent.off( @event, @funk )
+		@parent.off @event, @funk
 
 	# register the listener into parent
 	on: ->

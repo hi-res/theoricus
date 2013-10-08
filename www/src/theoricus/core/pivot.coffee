@@ -81,7 +81,7 @@ module.exports = class Pivot
 
 
 	# assigns a function to the given event, returns a PivotItem ( listener )
-	on: ( event, funk ) ->
+	on: ( event, funk, bind = off ) ->
 		@events[ event ] ?= { listeners: [], value: null }
 
 		listener       = new Item @
@@ -89,6 +89,10 @@ module.exports = class Pivot
 		listener.funk  = funk
 
 		@events[ event ].listeners.push listener
+
+		if bind
+			if @get( event ) != null
+				listener.trigger @get( event )
 
 		return listener
 
@@ -107,12 +111,8 @@ module.exports = class Pivot
 
 	# same as "on" function, but will trigger the event instantly
 	# in case the value is defined
-	bind: ( event, funk ) ->
-		listener = @on event, funk
-		if @get( event ) != null
-			listener.trigger @get( event )
-
-		return listener
+	bind: ( event, funk, bind = on ) ->
+		return @on event, funk, bind
 
 
 	# if the value is different from previous set or triggered value 
