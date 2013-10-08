@@ -105,10 +105,12 @@ module.exports = class Pivot
 
 		console.log "function wasnt bined to event #{event}"
 
-	# same as "on" function, but will trigger the value at binding phase
+	# same as "on" function, but will trigger the event instantly
+	# in case the value is defined
 	bind: ( event, funk ) ->
 		listener = @on event, funk
-		listener.trigger @get( event )
+		if @get( event ) != null
+			listener.trigger @get( event )
 
 		return listener
 
