@@ -5,7 +5,7 @@
 
 StringUtil = require 'theoricus/utils/string_util'
 View = require 'theoricus/mvc/view'
-Pivot = require 'theoricus/core/pivot'
+Pivot = require 'the-pivot'
 
 ###*
   Responsible for executing the {{#crossLink "Controller"}}__controller__{{/crossLink}} render action based on the {{#crossLink "Route"}}__Route__{{/crossLink}} information.
