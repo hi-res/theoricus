@@ -111,7 +111,7 @@ module.exports = class Processes
 
       @pending_processes = []
 
-      # process.is_new = true
+      process.is_new = true
 
       @_filter_pending_processes process, =>
         do @_filter_dead_processes
