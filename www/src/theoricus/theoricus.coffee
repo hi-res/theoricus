@@ -70,4 +70,8 @@ module.exports = class Theoricus
     @method start
   ###
   start: ->
+    if @processes
+
+      console.error "You can't start the application twice"
+      return
     @processes = new Processes @, @Routes
