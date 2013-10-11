@@ -16,7 +16,7 @@ module.exports = class Fetcher
 
   	@queue.addEventListener "complete", @_on_queue_complete
 
-  load: ( @records ) ->
+  load: ( @records = [] ) ->
 
     for model in @records
       model.load?( @ )
