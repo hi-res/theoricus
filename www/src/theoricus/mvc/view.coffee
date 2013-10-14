@@ -96,9 +96,10 @@ module.exports = class View
   ###
   _render:( data = {}, template, el = $ @process.route.el )=>
     @data = 
-      view: @
+      view  : @
       params: @process.params
-      data: data
+      data  : data
+      the   : @the
 
     @before_render?(@data)
 
@@ -115,6 +116,17 @@ module.exports = class View
       template = "#{tmpl_folder}/#{tmpl_name}"
 
     @render_template template
+
+    @after_render?(@data)
+    @set_triggers?()
+
+    if @on_resize?
+      $( window ).unbind 'resize', @_on_resize
+      $( window ).bind   'resize', @_on_resize
+      @on_resize()
+
+
+    @in()
 
   ###*
     If there is a `before_render` method implemented, it will be executed before the view's template is appended to the document.
@@ -134,22 +146,13 @@ module.exports = class View
 
     @the.factory.template template, ( template ) =>
 
-      dom = template @data
-      dom = @el.append dom
+      dom = $ template @data
+      @el.append dom
+      @el = dom
 
       # binds item if the data passed is a valid Model
       if (@data instanceof Model)
         @data.bind dom, !@the.config.autobind
-      
-      @set_triggers?()
-      @after_render?(@data)
-
-      @in()
-
-      if @on_resize?
-        $( window ).unbind 'resize', @_on_resize
-        $( window ).bind   'resize', @_on_resize
-        @on_resize()
 
   ###*
     If there is an `after_render` method implemented, it will be executed after the view's template is appended to the document. 
@@ -255,8 +258,10 @@ module.exports = class View
     if @on_resize?
       $( window ).unbind 'resize', @_on_resize
 
-    @before_destroy?()
-    @el.empty()
+    @unset_triggers?()
+    @before_destroy?(@data)
+
+    @el.remove()
 
   # ~> Shortcuts
 

@@ -5,13 +5,14 @@
 
 StringUtil = require 'theoricus/utils/string_util'
 View = require 'theoricus/mvc/view'
+Pivot = require 'the-pivot'
 
 ###*
   Responsible for executing the {{#crossLink "Controller"}}__controller__{{/crossLink}} render action based on the {{#crossLink "Route"}}__Route__{{/crossLink}} information.
 
   @class Process
 ###
-module.exports = class Process
+module.exports = class Process extends Pivot
 
   ###*
   {{#crossLink "Controller"}}__Controller__{{/crossLink}} instance, responsible for rendering the {{#crossLink "View"}}__views__{{/crossLink}} based on the __action__ defined in the {{#crossLink "Route"}}__Route's__{{/crossLink}} {{#crossLink "Route/to:property"}} __to__ {{/crossLink}} property.
@@ -90,6 +91,8 @@ module.exports = class Process
   ###
   constructor:( @the, @processes, @route, @at, @url, @parent_process, fn )->
 
+    super()
+    
     # initialize process logic
     do @initialize
 

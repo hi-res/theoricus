@@ -125,7 +125,7 @@ module.exports = class Controller
     #     return @redirect '/signin'
     #   @render '/signedin'
     # 
-    if @process.is_in_the_middle_of_running_an_action
+    if @process?.is_in_the_middle_of_running_an_action
 
       # kill current running process
       @process.processes.active_processes.pop()
