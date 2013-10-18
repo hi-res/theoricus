@@ -121,7 +121,7 @@ module.exports = class Process extends Pivot
   
   @param after_run {Function} Callback to be called after the view was rendered.
   ###
-  run:( after_run )->
+  run:->
     return unless @controller?
 
     # sets is_in_the_middle_of_running_an_action=true
@@ -131,24 +131,27 @@ module.exports = class Process extends Pivot
     unless @controller[ action = @route.action_name ]
       @controller[ action ] = @controller._build_action @
 
+
     # inject the current process into controller
     @controller.process = @
-
-    # creates callback to reset things
-    @after_run = =>
-      @controller.process = null
-      after_run()
-
-    # sets the callback
-    @controller.after_render = @after_run
 
     # executes action
     @controller[ action ] @params
 
+
+  render: ( after_render ) ->
+
+    @controller.process = @
+
+    # creates callback to reset things
+    after_run = =>
+      @controller.process = null
+      after_render()
+
+    @controller._render after_run
+
     # sets is_in_the_middle_of_running_an_action=false
     @is_in_the_middle_of_running_an_action = false
-
-
 
   ###*
   Executes the {{#crossLink "View"}}__view's__{{/crossLink}} transition {{#crossLink "View/out:method"}} __out__ {{/crossLink}} method, wait for it to empty the dom element and then call the `@after_destroy` callback.
@@ -170,6 +173,7 @@ module.exports = class Process extends Pivot
       console.error msg
       return
 
+    console.log 'after destroy is : ', @after_destroy
     @view.out =>
       @view.destroy()
       @after_destroy?()

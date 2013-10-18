@@ -73,22 +73,36 @@ module.exports = class Controller
             render "app/views/index", Model.first()
   ###
   render:( path, data )->
+
+    # @process.on 'render', @_render
+
+    url = @process.url
+    process = @process
+
     @the.factory.view path, (view)=>
       return unless view?
 
-      @process.view = view
-
-      view.process = @process
-      view.after_in = @after_render
+      process.view = view
+      view.process = process
 
       if data instanceof Fetcher
         if data.loaded
-          view._render data.records
+
+          process.data = data.records
+          process.trigger 'data_loaded', url
         else
           data.onload = ( records ) =>
-            view._render records
+
+            process.data = records
+            process.trigger 'data_loaded', url
       else
-        view._render data
+        process.data = data
+        process.trigger 'data_loaded', url
+
+
+  _render: ( after_render ) =>
+    @process.view.after_in = after_render
+    @process.view._render @process.data
 
   ###*
     This method substitutes the need of calling @render and returning

@@ -217,7 +217,17 @@ module.exports = class Processes
       @active_processes = _.reject @active_processes, (p)->
         p.route.match is process.route.match
 
-      process.destroy @_destroy_dead_processes
+      console.log '@dead_processes ->', @dead_processes.length
+
+      if @dead_processes.length == 0
+        console.error 'hey'
+        # process.destroy()
+        @_run_pending_processes( ( done ) => process.destroy( done ) )
+
+      else
+        process.destroy =>
+          console.warn 'destroy callback called'
+          @_destroy_dead_processes()
 
     else
       @_run_pending_processes()
@@ -227,7 +237,7 @@ module.exports = class Processes
 
   @method _run_pending_processes
   ###
-  _run_pending_processes:()=>
+  _run_pending_processes:( before_render )=>
     if @pending_processes.length
 
       process = @pending_processes.pop()
@@ -236,9 +246,29 @@ module.exports = class Processes
 
       unless found?
         @active_processes.push process
-        process.run @_run_pending_processes
+        
+        process.on 'data_loaded', =>
+
+          console.log 'before_render ->', before_render
+
+          if before_render?
+            console.warn 'it has a before render!'
+
+            before_render () =>
+              console.log 'REEENDER!!!!!'
+              console.log 'REEENDER!!!!!'
+              console.log 'REEENDER!!!!!'
+              console.log 'REEENDER!!!!!'
+              console.log 'REEENDER!!!!!'
+              console.log 'REEENDER!!!!!'
+              process.render @_run_pending_processes
+
+          else
+            process.render @_run_pending_processes
+
+        process.run()
       else
-        @_run_pending_processes()
+        @_run_pending_processes( before_render )
     else
       @locked = false
       @the.crawler.is_rendered = true
