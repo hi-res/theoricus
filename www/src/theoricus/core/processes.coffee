@@ -217,16 +217,12 @@ module.exports = class Processes
       @active_processes = _.reject @active_processes, (p)->
         p.route.match is process.route.match
 
-      console.log '@dead_processes ->', @dead_processes.length
-
       if @dead_processes.length == 0
-        console.error 'hey'
         # process.destroy()
         @_run_pending_processes( ( done ) => process.destroy( done ) )
 
       else
         process.destroy =>
-          console.warn 'destroy callback called'
           @_destroy_dead_processes()
 
     else
@@ -249,18 +245,8 @@ module.exports = class Processes
         
         process.on 'data_loaded', =>
 
-          console.log 'before_render ->', before_render
-
           if before_render?
-            console.warn 'it has a before render!'
-
             before_render () =>
-              console.log 'REEENDER!!!!!'
-              console.log 'REEENDER!!!!!'
-              console.log 'REEENDER!!!!!'
-              console.log 'REEENDER!!!!!'
-              console.log 'REEENDER!!!!!'
-              console.log 'REEENDER!!!!!'
               process.render @_run_pending_processes
 
           else
