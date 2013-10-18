@@ -173,7 +173,6 @@ module.exports = class Process extends Pivot
       console.error msg
       return
 
-    console.log 'after destroy is : ', @after_destroy
     @view.out =>
       @view.destroy()
       @after_destroy?()
