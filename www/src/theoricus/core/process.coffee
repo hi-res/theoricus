@@ -180,6 +180,6 @@ module.exports = class Process extends Pivot
       @view = null
       delete @view
 
-      @on_activate = undefined
-      @on_activate = null
-      delete @on_activate
+    @on_activate = undefined
+    @on_activate = null
+    delete @on_activate

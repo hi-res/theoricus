@@ -103,10 +103,11 @@ module.exports = class View
 
     @before_render?(@data)
 
-    @process.on_activate = =>
-      @on_activate?()
-      if @title?
-        document.title = @title
+    if not @process.on_activate?
+      @process.on_activate = =>
+        @on_activate?()
+        if @title?
+          document.title = @title
 
     @el = el
 
@@ -206,7 +207,10 @@ module.exports = class View
       @after_in?()
     else
       @el.css "opacity", 0
-      @el.animate {opacity: 1}, 300, => @after_in?()
+
+      @el.animate {opacity: 1}, 300
+
+      @after_in?()
 
   ###*
     If there is an`@after_in` method implemented, it will be called after the view finish its intro animations.
