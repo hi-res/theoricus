@@ -263,6 +263,13 @@ module.exports = class View
 
     @el.remove()
 
+    # delete all references from this view
+    for prop of @
+      # brute force just in case
+      delete @[prop]
+      @[prop] = undefined
+      @[prop] = null
+
   # ~> Shortcuts
 
   ###*
