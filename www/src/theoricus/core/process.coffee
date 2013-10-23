@@ -176,3 +176,11 @@ module.exports = class Process extends Pivot
     @view.out =>
       @view.destroy()
       @after_destroy?()
+
+      @view = undefined
+      @view = null
+      delete @view
+
+    @on_activate = undefined
+    @on_activate = null
+    delete @on_activate
