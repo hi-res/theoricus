@@ -174,6 +174,8 @@ module.exports = class Process extends Pivot
       return
 
     @view.out =>
+      return if not @view?
+      
       @view.destroy()
       @after_destroy?()
 
