@@ -177,7 +177,7 @@ module.exports = class Process extends Pivot
       if not @view?
         # console.error 'Cannot call destroy of view, weird error here'
         return
-        
+
       @view.destroy()
       @after_destroy?()
 
