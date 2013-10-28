@@ -1,5 +1,5 @@
 #
-#	Testing asset loading on feetcher, using create.js
+# Testing asset loading on feetcher, using create.js
 #
 
 module.exports = class Fetcher
@@ -12,9 +12,12 @@ module.exports = class Fetcher
 
 
   constructor: ->
-  	@queue = new createjs.LoadQueue false
+    @queue = new createjs.LoadQueue false
 
-  	@queue.addEventListener "complete", @_on_queue_complete
+    @queue.addEventListener "complete", @_on_queue_complete
+
+    @queue.addEventListener "fileload", ( event ) =>
+      console.log 'fetcher preloaded:', event.item.src
 
   load: ( @records = [] ) ->
 
@@ -24,9 +27,18 @@ module.exports = class Fetcher
     @queue.load()
 
   img: ( path ) ->
-  	@queue.loadFile path, false
+
+    # console.log "adding #{path} to queue"
+
+    @queue.loadFile path, false
 
 
   _on_queue_complete: =>
 
-  	@onload?( @records )
+    if @process?
+      controller = @process.route.controller_name
+      action     = @process.route.action_name
+
+      # console.warn "On Queue Complete #{controller}/#{action}"
+
+    @onload?( @records )

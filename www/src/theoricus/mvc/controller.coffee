@@ -80,24 +80,43 @@ module.exports = class Controller
     process = @process
 
     @the.factory.view path, (view)=>
-      return unless view?
+      if not view?
+        # console.error "Couldn't find view for #{path}"
+        return
 
       process.view = view
       view.process = process
 
+      # always trigger before load for consistency
+      @before_load_data?()
+
       if data instanceof Fetcher
+
+        data.process = process
+        
         if data.loaded
 
           process.data = data.records
-          process.trigger 'data_loaded', url
+          # console.warn '-----> 1'
+
         else
+
+          # console.warn '-----> 2.1'
+
           data.onload = ( records ) =>
 
+            # console.warn '-----> 2.2'
+
             process.data = records
+            @after_load_data?( process.data )
             process.trigger 'data_loaded', url
-      else
-        process.data = data
-        process.trigger 'data_loaded', url
+
+          return
+
+      # console.warn '-----> 3'
+
+      @after_load_data?( process.data )
+      process.trigger 'data_loaded', url
 
 
   _render: ( after_render ) =>

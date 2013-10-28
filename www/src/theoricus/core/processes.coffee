@@ -44,6 +44,14 @@ module.exports = class Processes
   pending_processes: []
 
   ###*
+  When true it will load the next request before destroying the current view,
+  still very experimental feature
+
+  @property {Boolean} locked
+  ###
+  parallel_loading: false
+
+  ###*
   Responsible for handling the url change. 
 
   When the URL changes, it initializes the {{#crossLink "Process"}}__process__{{/crossLink}} responsible for the current {{#crossLink "Route"}}__route__{{/crossLink}} (which is responsible for the current URL).
@@ -217,7 +225,7 @@ module.exports = class Processes
       @active_processes = _.reject @active_processes, (p)->
         p.route.match is process.route.match
 
-      if @dead_processes.length == 0
+      if @dead_processes.length == 0 and @parallel_loading == true
         # process.destroy()
         @_run_pending_processes( ( done ) => process.destroy( done ) )
 
