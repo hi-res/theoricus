@@ -16,7 +16,8 @@ module.exports = class Fetcher
 
     @queue.addEventListener "complete", @_on_queue_complete
 
-<<<<<<< HEAD
+    @queue.addEventListener "fileload", @_on_file_loaded
+    
     @queue.addEventListener "fileload", ( event ) =>
       # console.log 'fetcher preloaded:', event.item.src
 
@@ -25,9 +26,6 @@ module.exports = class Fetcher
           item = $( event.item.tag )
           item.hide()
           $( 'body' ).append item
-=======
-    @queue.addEventListener "fileload", @_on_file_loaded
->>>>>>> 2d7fc65d0a96578eb10f5f71f93c7145996ab5ee
 
   _on_file_loaded: ( e ) =>
 
