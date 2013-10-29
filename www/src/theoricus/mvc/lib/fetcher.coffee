@@ -17,7 +17,13 @@ module.exports = class Fetcher
     @queue.addEventListener "complete", @_on_queue_complete
 
     @queue.addEventListener "fileload", ( event ) =>
-      console.log 'fetcher preloaded:', event.item.src
+      # console.log 'fetcher preloaded:', event.item.src
+
+      switch event.item.ext
+        when 'jpg', 'png'
+          item = $( event.item.tag )
+          item.hide()
+          $( 'body' ).append item
 
   load: ( @records = [] ) ->
 
