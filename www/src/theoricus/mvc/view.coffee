@@ -283,3 +283,9 @@ module.exports = class View
   ###
   navigate:( url, trigger, replace )->
     @the.processes.router.navigate url, trigger, replace
+
+  ###
+  Executs jQuery find method on the view element
+  ###
+  find: ( selector ) ->
+    @el.find selector
