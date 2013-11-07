@@ -112,7 +112,9 @@ module.exports = class Controller
             process.trigger 'data_loaded', url
 
           return
-
+      else
+        process.data = data
+      
       # console.warn '-----> 3'
 
       @after_load_data?( process.data )
