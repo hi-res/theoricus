@@ -95,11 +95,7 @@ module.exports = class View
     @param [el=null] {Object} jQuery object to render the view on, default is $ proces.route.el
   ###
   _render:( data = {}, template, el = $ @process.route.el )=>
-    @data = 
-      view  : @
-      params: @process.params
-      data  : data
-      the   : @the
+    @data = @_prepare_data_for_template( data )
 
     @before_render?(@data)
 
@@ -128,6 +124,14 @@ module.exports = class View
 
 
     @in()
+
+  _prepare_data_for_template: ( data = {} ) =>
+    return {
+      view  : @
+      params: @process.params
+      data  : data
+      the   : @the
+    }
 
   ###*
     If there is a `before_render` method implemented, it will be executed before the view's template is appended to the document.
