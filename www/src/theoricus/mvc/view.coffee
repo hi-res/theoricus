@@ -99,11 +99,12 @@ module.exports = class View
 
     @before_render?(@data)
 
-    if not @process.on_activate?
-      @process.on_activate = =>
-        @on_activate?()
-        if @title?
-          document.title = @title
+    if @process?
+      if not @process.on_activate?
+        @process.on_activate = =>
+          @on_activate?()
+          if @title?
+            document.title = @title
 
     @el = el
 
