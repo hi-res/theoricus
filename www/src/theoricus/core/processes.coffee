@@ -115,6 +115,22 @@ module.exports = class Processes
 
     new Process @the, @, route, route.at, url, null, ( process, controller )=>
 
+
+      # if the route is the same as the last rendered route
+      # just triggers controller action, as in: won't destroy and render
+      # again.
+      # 
+      # You must have a boolean on your controller checking if the view
+      # is rendered, so when it gets called again it don't render on top.
+      # 
+      # When the view is destroyed you must set that flag to false again.
+      if @last_process?.route.match == process.route.match
+        @locked = false
+
+        process.run()
+
+        return
+
       @last_process = process
 
       @pending_processes = []
