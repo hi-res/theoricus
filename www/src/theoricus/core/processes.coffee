@@ -124,12 +124,13 @@ module.exports = class Processes
       # is rendered, so when it gets called again it don't render on top.
       # 
       # When the view is destroyed you must set that flag to false again.
-      if @last_process?.route.match == process.route.match
-        @locked = false
+      # if @last_process?.route.match == process.route.match
 
-        process.run()
+      #   @locked = false
 
-        return
+      #   process.run()
+
+      #   return
 
       @last_process = process
 
@@ -269,11 +270,20 @@ module.exports = class Processes
         
         process.on 'data_loaded', =>
 
+
+          console.warn "data loaded! ", 1
+
           if before_render?
+            console.warn "data loaded! ", 2
+
             before_render () =>
+              console.warn "data loaded! ", 3
+
               process.render @_run_pending_processes
 
           else
+            console.warn "data loaded! ", 4
+
             process.render @_run_pending_processes
 
         process.run()

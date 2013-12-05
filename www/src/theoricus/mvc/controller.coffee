@@ -81,7 +81,7 @@ module.exports = class Controller
 
     @the.factory.view path, (view)=>
       if not view?
-        # console.error "Couldn't find view for #{path}"
+        console.error "Couldn't find view for #{path}"
         return
 
       process.view = view
@@ -97,15 +97,15 @@ module.exports = class Controller
         if data.loaded
 
           process.data = data.records
-          # console.warn '-----> 1'
+          console.warn '-----> 1'
 
         else
 
-          # console.warn '-----> 2.1'
+          console.warn '-----> 2.1'
 
           data.onload = ( records ) =>
 
-            # console.warn '-----> 2.2'
+            console.warn '-----> 2.2'
 
             process.data = records
             @after_load_data?( process.data )
@@ -115,7 +115,10 @@ module.exports = class Controller
       else
         process.data = data
       
-      # console.warn '-----> 3'
+      console.warn '-----> 3'
+      console.warn " ->", @after_load_data
+      console.warn " ->", url
+      console.warn 'process ->', process
 
       @after_load_data?( process.data )
       process.trigger 'data_loaded', url
