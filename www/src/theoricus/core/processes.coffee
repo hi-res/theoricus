@@ -271,19 +271,11 @@ module.exports = class Processes
         process.on 'data_loaded', =>
 
 
-          console.warn "data loaded! ", 1
-
           if before_render?
-            console.warn "data loaded! ", 2
-
             before_render () =>
-              console.warn "data loaded! ", 3
-
               process.render @_run_pending_processes
 
           else
-            console.warn "data loaded! ", 4
-
             process.render @_run_pending_processes
 
         process.run()
