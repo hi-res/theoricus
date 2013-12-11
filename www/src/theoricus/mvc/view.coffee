@@ -269,6 +269,10 @@ module.exports = class View
 
     @el.remove()
 
+    if @process.view == @
+      @process.view = null
+
+
     # delete all references from this view
     for prop of @
       # brute force just in case
