@@ -190,6 +190,18 @@ module.exports = class View
       ( @el.find sel ).bind   ev, null, @[funk]
 
   ###*
+    Unbind the events from `@events`
+
+    @method set_triggers
+  ###
+  unset_triggers: () =>
+    return if not @events?
+
+    for sel, funk of @events
+      [all, sel, ev] = sel.match /(.*)[\s|\t]+([\S]+)$/m
+      ( @el.find sel ).unbind ev, null, @[funk]
+
+  ###*
     If there is a `@before_in` method implemented, it will be called before the view execute its intro animations. 
 
     Useful to setting up the DOM elements properties before animating them.
