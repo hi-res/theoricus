@@ -35,7 +35,7 @@
     "lodash": "1.3.x",
     "the-pivot": "*",
     "optimist": "0.6.x",
-    "polvo": "0.5.x",
+    "polvo": "0.6.3",
     "source-map-support": "0.2.x",
     "snapshooter": "0.3.x",
     "istanbul-middleware": "0.1.x",
