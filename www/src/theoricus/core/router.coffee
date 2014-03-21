@@ -180,7 +180,7 @@ module.exports = class Router
       return window.location = url
 
     action   = if replace then "replaceState" else "pushState"
-    History[action] null, null, url
+    History[action] document.title, document.title, url
 
   ###*
     {{#crossLink "Router/navigate:method"}} __Navigate__ {{/crossLink}} to the initial url state.
